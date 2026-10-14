@@ -3,7 +3,7 @@
  * Plugin Name:       COS 图片上传
  * Plugin URI:        https://github.com/suyin101/CosUploader
  * Description:       把媒体库里的图片（以及其他附件）自动上传到腾讯云对象存储 COS，前台直接用 COS 地址访问，可随时切回本站。
- * Version:           1.3.1
+ * Version:           1.3.2
  * Requires at least: 5.8
  * Requires PHP:      7.2
  * Author:            suyin101
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('COSU_VERSION', '1.3.1');
+define('COSU_VERSION', '1.3.2');
 define('COSU_FILE', __FILE__);
 
 require_once __DIR__ . '/includes/class-cos-client.php';
@@ -291,9 +291,10 @@ class Cos_Uploader
      * - 存储桶里已经有同一个文件（本地没有，或大小一致）就直接用，不重复上传
      * - 本地和存储桶都没有的缩略图会跳过（以后重新生成缩略图时会自动补传）
      * - 原图哪里都找不到则整组失败
+     * - $fresh：刚上传的新图片，本地有的文件直接上传，不先查存储桶（少一半请求）
      * @return array|WP_Error 成功返回被跳过的缺失文件列表
      */
-    private function sync_attachment($post_id, $meta = null)
+    private function sync_attachment($post_id, $meta = null, $fresh = false)
     {
         $done = $this->is_synced($post_id) ? array_filter((array) get_post_meta($post_id, self::META, true)) : [];
         $files = $this->files_of($post_id, $meta);
@@ -310,14 +311,16 @@ class Cos_Uploader
                 continue;
             }
 
-            $remote = $client->size($key);
-            if (is_wp_error($remote)) {
-                return $remote;
-            }
             $has_local = is_readable($local);
-            if (is_int($remote) && (!$has_local || filesize($local) === $remote)) {
-                $done[] = $key;
-                continue;
+            if (!($fresh && $has_local)) {
+                $remote = $client->size($key);
+                if (is_wp_error($remote)) {
+                    return $remote;
+                }
+                if (is_int($remote) && (!$has_local || filesize($local) === $remote)) {
+                    $done[] = $key;
+                    continue;
+                }
             }
 
             if (!$has_local) {
@@ -349,7 +352,7 @@ class Cos_Uploader
 
     public function on_generate_metadata($meta, $post_id)
     {
-        $r = $this->sync_attachment($post_id, $meta);
+        $r = $this->sync_attachment($post_id, $meta, true);
         if (is_wp_error($r)) {
             $this->remember_error($post_id, $r);
         }
