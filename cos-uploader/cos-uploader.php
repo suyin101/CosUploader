@@ -3,7 +3,7 @@
  * Plugin Name:       COS 图片上传
  * Plugin URI:        https://github.com/suyin101/CosUploader
  * Description:       把媒体库里的图片（以及其他附件）自动上传到腾讯云对象存储 COS，前台直接用 COS 地址访问，可随时切回本站。
- * Version:           1.3.0
+ * Version:           1.3.1
  * Requires at least: 5.8
  * Requires PHP:      7.2
  * Author:            suyin101
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('COSU_VERSION', '1.3.0');
+define('COSU_VERSION', '1.3.1');
 define('COSU_FILE', __FILE__);
 
 require_once __DIR__ . '/includes/class-cos-client.php';
@@ -415,10 +415,63 @@ class Cos_Uploader
 
     public function filter_content($content)
     {
-        $search = array_map(function ($b) {
-            return $b . '/';
-        }, $this->local_bases());
-        return str_replace($search, $this->public_base() . '/', $content);
+        // 只换已经确认在 COS 上的文件；没传上去的、不在媒体库里的，保持本站地址，避免 NoSuchKey
+        $quoted = implode('|', array_map(function ($b) {
+            return preg_quote($b . '/', '#');
+        }, $this->local_bases()));
+        $pattern = '#(?:' . $quoted . ')([^\s"\'<>()?\#]+)#';
+        if (!preg_match_all($pattern, $content, $m)) {
+            return $content;
+        }
+        $on_cos = $this->keys_on_cos(array_unique($m[1]));
+        if (!$on_cos) {
+            return $content;
+        }
+        return preg_replace_callback($pattern, function ($x) use ($on_cos) {
+            return isset($on_cos[$this->key_for(rawurldecode($x[1]))]) ? $this->public_base() . '/' . $x[1] : $x[0];
+        }, $content);
+    }
+
+    /**
+     * 给出一批 uploads 下的相对路径，返回其中确认已传到当前存储桶的 key（key => true）。
+     * 缩略图 foo-300x200.jpg、大图 foo.jpg（实际记录为 foo-scaled.jpg）都能找到所属附件。
+     */
+    private function keys_on_cos(array $relatives)
+    {
+        $candidates = [];
+        foreach ($relatives as $rel) {
+            $rel = rawurldecode($rel);
+            $base = preg_replace('#-\d+x\d+(\.[a-z0-9]+)$#i', '$1', $rel);
+            $candidates[] = $rel;
+            $candidates[] = $base;
+            $candidates[] = preg_replace('#(\.[a-z0-9]+)$#i', '-scaled$1', $base);
+        }
+        $candidates = array_values(array_unique($candidates));
+
+        global $wpdb;
+        $ids = [];
+        foreach (array_chunk($candidates, 200) as $chunk) {
+            $in = implode(',', array_fill(0, count($chunk), '%s'));
+            $ids = array_merge($ids, $wpdb->get_col($wpdb->prepare(
+                "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_wp_attached_file' AND meta_value IN ($in)",
+                $chunk
+            )));
+        }
+        if (!$ids) {
+            return [];
+        }
+        $ids = array_map('intval', array_unique($ids));
+        update_meta_cache('post', $ids);
+
+        $keys = [];
+        foreach ($ids as $id) {
+            if ($this->is_synced($id)) {
+                foreach (array_filter((array) get_post_meta($id, self::META, true)) as $key) {
+                    $keys[$key] = true;
+                }
+            }
+        }
+        return $keys;
     }
 
     public function filter_content_to_local($content)

@@ -167,7 +167,7 @@ $pct = $stats['total'] ? (int) floor($stats['synced'] * 100 / $stats['total']) :
                             <i></i>
                             <span>显示文章时，把本站图片地址换成 COS 地址</span>
                         </label>
-                        <p class="cosu-hint">等「待同步」变成 0 再打开，否则还没传上去的图片会显示不出来。</p>
+                        <p class="cosu-hint">只换已经传到 COS 的图片；还没同步的、或不在媒体库里的图片继续用本站地址，不会出现打不开的情况。</p>
                     </div>
                 </div>
             </div>
