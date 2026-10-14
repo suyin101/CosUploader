@@ -1,0 +1,180 @@
+/* COS 图片上传 - 设置页样式（只作用于 .cosu 内） */
+.cosu {
+    --cosu-blue: #0052d9;
+    --cosu-blue-soft: #ecf2fe;
+    --cosu-green: #2ba471;
+    --cosu-green-soft: #e8f8f2;
+    --cosu-amber: #e37318;
+    --cosu-amber-soft: #fff1e9;
+    --cosu-red: #d54941;
+    --cosu-red-soft: #fff0ed;
+    --cosu-text: #1d2129;
+    --cosu-muted: #86909c;
+    --cosu-line: #e5e6eb;
+    --cosu-bg: #f7f8fa;
+    --cosu-radius: 12px;
+    max-width: 960px;
+    color: var(--cosu-text);
+}
+.cosu *, .cosu *::before, .cosu *::after { box-sizing: border-box; }
+.cosu [hidden] { display: none !important; }
+.cosu code { background: var(--cosu-bg); padding: 1px 6px; border-radius: 4px; font-size: 12px; }
+
+/* 顶部 */
+.cosu-hero {
+    display: flex; align-items: center; gap: 16px;
+    margin: 20px 0 16px; padding: 20px 24px;
+    background: linear-gradient(135deg, #0052d9 0%, #2b7bff 100%);
+    border-radius: var(--cosu-radius); color: #fff;
+    box-shadow: 0 6px 20px rgba(0, 82, 217, .18);
+}
+.cosu-hero-icon {
+    flex: none; width: 48px; height: 48px; border-radius: 12px;
+    display: grid; place-items: center; background: rgba(255, 255, 255, .18);
+}
+.cosu-hero-text { flex: 1; min-width: 0; }
+.cosu-title { font-size: 20px; font-weight: 600; line-height: 1.4; }
+.cosu-ver { font-size: 12px; font-weight: 500; padding: 2px 8px; margin-left: 6px; border-radius: 999px; background: rgba(255, 255, 255, .2); vertical-align: 2px; }
+.cosu-sub { opacity: .85; margin-top: 2px; }
+.cosu-hero-status { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.cosu-hero .cosu-pill { background: rgba(255, 255, 255, .95); }
+
+/* 小标签 */
+.cosu-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 500;
+    text-decoration: none; white-space: nowrap;
+}
+.cosu-pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.cosu-pill.is-green { color: var(--cosu-green); background: var(--cosu-green-soft); }
+.cosu-pill.is-amber { color: var(--cosu-amber); background: var(--cosu-amber-soft); }
+.cosu-pill.is-gray { color: var(--cosu-muted); background: var(--cosu-bg); }
+.cosu-pill.is-blue { color: var(--cosu-blue); background: var(--cosu-blue-soft); }
+a.cosu-pill.is-blue:hover { color: var(--cosu-blue); filter: brightness(.97); }
+
+/* 提示条 */
+.cosu-alert { padding: 12px 16px; border-radius: 10px; margin-bottom: 12px; line-height: 1.7; border: 1px solid transparent; }
+.cosu-alert.is-red { background: var(--cosu-red-soft); border-color: #ffd8d2; color: #ad352f; }
+.cosu-alert.is-amber { background: var(--cosu-amber-soft); border-color: #ffd9c2; color: #9a4b0e; }
+
+/* 统计 */
+.cosu-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.cosu-stat { background: #fff; border: 1px solid var(--cosu-line); border-radius: var(--cosu-radius); padding: 16px 18px; }
+.cosu-stat-label { color: var(--cosu-muted); font-size: 13px; }
+.cosu-stat-num { font-size: 26px; font-weight: 600; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.cosu-stat-num.is-green { color: var(--cosu-green); }
+.cosu-stat-num.is-amber { color: var(--cosu-amber); }
+
+/* 进度条 */
+.cosu-bar { height: 8px; border-radius: 999px; background: var(--cosu-bg); overflow: hidden; margin-top: 14px; }
+.cosu-bar.is-thin { height: 4px; margin-top: 8px; }
+.cosu-bar > span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--cosu-blue), #4d8fff); border-radius: inherit; transition: width .3s ease; }
+
+/* 标签页 */
+.cosu-tabs { display: flex; gap: 4px; padding: 4px; background: #fff; border: 1px solid var(--cosu-line); border-radius: 10px; margin-bottom: 16px; width: fit-content; }
+.cosu-tab {
+    position: relative; border: 0; background: none; cursor: pointer;
+    padding: 8px 20px; border-radius: 7px; font-size: 14px; color: #4e5969;
+}
+.cosu-tab:hover { color: var(--cosu-blue); }
+.cosu-tab.is-active { background: var(--cosu-blue); color: #fff; }
+.cosu-dot { position: absolute; top: 6px; right: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--cosu-red); }
+
+/* 卡片 */
+.cosu-card { background: #fff; border: 1px solid var(--cosu-line); border-radius: var(--cosu-radius); padding: 20px 24px; margin-bottom: 16px; }
+.cosu-card-head { margin-bottom: 16px; }
+.cosu-card-head h2 { font-size: 16px; font-weight: 600; margin: 0 0 4px; padding: 0; }
+.cosu-card-head p { margin: 0; color: var(--cosu-muted); }
+.cosu-hint { color: var(--cosu-muted); font-size: 12px; margin: 6px 0 0; line-height: 1.7; }
+.cosu-muted { color: var(--cosu-muted); }
+
+/* 表单行 */
+.cosu-row { display: grid; grid-template-columns: 140px 1fr; gap: 16px; align-items: start; padding: 12px 0; border-top: 1px solid #f2f3f5; }
+.cosu-card-head + .cosu-row { border-top: 0; padding-top: 0; }
+.cosu-row > label { padding-top: 8px; font-weight: 500; color: #4e5969; }
+.cosu .cosu-input {
+    width: 100%; max-width: 440px; height: 36px; padding: 0 12px;
+    border: 1px solid #dcdcdc; border-radius: 8px; background: #fff;
+    font-size: 14px; color: var(--cosu-text); box-shadow: none;
+}
+.cosu select.cosu-input { padding-right: 28px; }
+.cosu .cosu-input:focus { border-color: var(--cosu-blue); box-shadow: 0 0 0 3px rgba(0, 82, 217, .12); outline: none; }
+
+/* 模式选择 */
+.cosu-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.cosu-choice-item { position: relative; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border: 1.5px solid var(--cosu-line); border-radius: 10px; cursor: pointer; transition: border-color .15s, background .15s; }
+.cosu-choice-item:hover { border-color: #b5c7ff; }
+.cosu-choice-item input { flex: none; margin: 3px 0 0; }
+.cosu-choice-item strong { display: block; font-size: 14px; }
+.cosu-choice-item em { display: block; font-style: normal; color: var(--cosu-muted); font-size: 12px; margin-top: 2px; line-height: 1.6; }
+.cosu-choice-item:has(input:checked) { border-color: var(--cosu-blue); background: var(--cosu-blue-soft); }
+
+/* 开关 */
+.cosu-switch { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; padding-top: 6px; }
+.cosu-switch input { position: absolute; opacity: 0; pointer-events: none; }
+.cosu-switch i { position: relative; flex: none; width: 36px; height: 20px; border-radius: 999px; background: #c9cdd4; transition: background .2s; }
+.cosu-switch i::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform .2s; box-shadow: 0 1px 2px rgba(0, 0, 0, .2); }
+.cosu-switch input:checked + i { background: var(--cosu-blue); }
+.cosu-switch input:checked + i::after { transform: translateX(16px); }
+.cosu-switch input:focus-visible + i { box-shadow: 0 0 0 3px rgba(0, 82, 217, .2); }
+
+/* 按钮 */
+.cosu-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    height: 36px; padding: 0 18px; border-radius: 8px; cursor: pointer;
+    border: 1px solid #dcdcdc; background: #fff; color: var(--cosu-text);
+    font-size: 14px; text-decoration: none; transition: all .15s;
+}
+.cosu-btn:hover { border-color: var(--cosu-blue); color: var(--cosu-blue); }
+.cosu-btn.is-primary { background: var(--cosu-blue); border-color: var(--cosu-blue); color: #fff; }
+.cosu-btn.is-primary:hover { background: #0047bd; color: #fff; }
+.cosu-btn:disabled { opacity: .5; cursor: not-allowed; }
+.cosu-btn.is-loading::before { content: ""; width: 14px; height: 14px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: cosu-spin .7s linear infinite; }
+@keyframes cosu-spin { to { transform: rotate(360deg); } }
+.cosu-actions { display: flex; justify-content: flex-end; }
+.cosu-sync-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+/* 测试结果 */
+.cosu-steps { margin: 16px 0 0; padding: 0; list-style: none; }
+.cosu-steps:empty { display: none; }
+.cosu-steps li { display: grid; grid-template-columns: 22px 80px 1fr; gap: 8px; padding: 10px 0; border-top: 1px solid #f2f3f5; line-height: 1.6; margin: 0; }
+.cosu-steps li:first-child { border-top: 0; }
+.cosu-steps b { font-weight: 500; }
+.cosu-steps .i { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-size: 12px; font-style: normal; margin-top: 1px; }
+.cosu-steps .is-ok .i { background: var(--cosu-green); }
+.cosu-steps .is-warn .i { background: var(--cosu-amber); }
+.cosu-steps .is-bad .i { background: var(--cosu-red); }
+.cosu-steps .is-bad span { color: var(--cosu-red); }
+
+/* 日志 */
+.cosu-log { margin-top: 12px; max-height: 260px; overflow: auto; font-size: 12px; line-height: 1.8; padding: 10px 12px; background: var(--cosu-bg); border-radius: 8px; color: #4e5969; word-break: break-all; }
+.cosu-log.is-red { background: var(--cosu-red-soft); color: #ad352f; }
+.cosu-log a { color: inherit; font-weight: 600; }
+.cosu-details { margin-top: 12px; }
+.cosu-details summary { cursor: pointer; color: var(--cosu-muted); }
+
+/* 更新 */
+.cosu-update { display: flex; gap: 32px; margin-bottom: 16px; }
+.cosu-update div { font-size: 13px; color: var(--cosu-muted); }
+.cosu-update strong { display: block; font-size: 20px; color: var(--cosu-text); font-weight: 600; margin-top: 2px; }
+.cosu-update .is-new strong { color: var(--cosu-blue); }
+.cosu-changelog .cosu-rel { padding: 14px 0; border-top: 1px solid #f2f3f5; }
+.cosu-changelog .cosu-rel:first-child { border-top: 0; padding-top: 0; }
+.cosu-rel-head { display: flex; align-items: center; gap: 8px; }
+.cosu-rel-head b { font-size: 15px; }
+.cosu-rel-head small { color: var(--cosu-muted); }
+.cosu-rel ul { margin: 8px 0 0 18px; list-style: disc; }
+.cosu-rel li, .cosu-rel p { margin: 4px 0; line-height: 1.7; }
+.cosu-rel h5 { margin: 10px 0 4px; font-size: 13px; }
+
+/* 窄屏 */
+@media (max-width: 782px) {
+    .cosu-hero { flex-wrap: wrap; padding: 16px; }
+    .cosu-hero-status { width: 100%; justify-content: flex-start; }
+    .cosu-stats { grid-template-columns: repeat(2, 1fr); }
+    .cosu-row { grid-template-columns: 1fr; gap: 6px; }
+    .cosu-row > label { padding-top: 0; }
+    .cosu-choice { grid-template-columns: 1fr; }
+    .cosu-card { padding: 16px; }
+    .cosu .cosu-input { max-width: none; }
+}
